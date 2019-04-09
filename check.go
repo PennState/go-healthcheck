@@ -72,12 +72,14 @@ func (k *Key) UnmarshalText(text []byte) error {
 
 type Checks map[Key][]Check
 
-func (c Checks) MarshalJSON() {
+func (c Checks) MarshalJSON() ([]byte, error) {
+	log.Info("Got here!")
 	for k, v := range c {
 		log.Info("Key: ", k, ", Value: ", v)
 	}
+	return nil, nil
 }
 
-func (c *Checks) UnmarshalJSON() {
-
+func (c *Checks) UnmarshalJSON(json []byte) error {
+	return nil
 }

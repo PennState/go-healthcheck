@@ -23,7 +23,7 @@ func TestMarshaling(t *testing.T) {
 	log.Info("Check: ", check)
 	checks[key] = checkSlice
 	log.Info("Checks: ", checks)
-	json, err := json.Marshal(checks)
+	json, err := json.Marshal(&checks)
 	if err != nil {
 		log.Error(err)
 	}
