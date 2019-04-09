@@ -1,10 +1,10 @@
-# go-microprofile-healthcheck
+# go-healthcheck
 
-Implements the EE4J Microprofile Health specification for Go servers.
+Implements the (draft) RFC for retrieving health status from Go servers.
 
 ## Protocol
 
-This library is both wire and protocol compatible with the EE4J Microprofile
-Health Check specification.  This specification can be found at:
+This library is both wire and protocol compatible with the (draft) RFC
+for HTTP API Health Checks.  This specification can be found at:
 
-<https://github.com/eclipse/microprofile-health/blob/master/spec/src/main/asciidoc/protocol-wireformat.adoc>
+<https://inadarei.github.io/rfc-healthcheck>
