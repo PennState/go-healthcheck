@@ -1,6 +1,6 @@
 # go-microprofile-healthcheck
 
-Implements the EE4J Microprofile health-check protocol for Go servers
+Implements the EE4J Microprofile Health specification for Go servers.
 
 ## Protocol
 
