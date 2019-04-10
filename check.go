@@ -3,6 +3,7 @@ package healthcheck
 import (
 	"fmt"
 	"io"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -11,10 +12,20 @@ type Checker interface {
 	Check() Check
 }
 
+//Check is an individual element of the array returned for a given Checks
+//key.
+//
+//See: https://inadarei.github.io/rfc-healthcheck/#the-checks-object
 type Check struct {
-	Name   string
-	Status Status
-	Data   map[string]interface{}
+	ComponentId       string
+	ComponentType     string
+	ObservedValue     interface{}
+	ObservedUnit      string
+	Status            Status
+	AffectedEndpoints []string
+	Time              time.Time
+	Output            string
+	Links             []string
 }
 
 //Key provides a composite key denoting the component name and measurement
