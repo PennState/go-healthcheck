@@ -9,7 +9,7 @@ import (
 )
 
 type Checker interface {
-	Check() Check
+	Check() ([]Check, Status)
 }
 
 //Check is an individual element of the array returned for a given Checks
