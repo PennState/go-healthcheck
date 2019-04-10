@@ -13,7 +13,7 @@ type Checker interface {
 
 type Check struct {
 	Name   string
-	Status State
+	Status Status
 	Data   map[string]interface{}
 }
 
@@ -31,6 +31,13 @@ func (k Key) MarshalText() ([]byte, error) {
 }
 
 func (k *Key) Scan(state fmt.ScanState, verb rune) error {
+	_, _, err := state.ReadRune()
+	if err != nil {
+		log.Debug("Missing componentName but it's mandatory")
+		return err
+	}
+	state.UnreadRune()
+
 	cn, err := state.Token(true, func(r rune) bool {
 		return r != ':'
 	})
@@ -40,7 +47,8 @@ func (k *Key) Scan(state fmt.ScanState, verb rune) error {
 	k.ComponentName = string(cn)
 
 	_, _, err = state.ReadRune()
-	if err != nil && err == io.ErrUnexpectedEOF {
+	if err != nil && (err == io.ErrUnexpectedEOF || err == io.EOF) {
+		log.Debug("There was no separator (:) found so there is no measurementName")
 		return nil
 	}
 	if err != nil {
@@ -70,6 +78,10 @@ func (k *Key) UnmarshalText(text []byte) error {
 	return err
 }
 
+//
+// Checks
+//
+
 type Checks map[Key][]Check
 
 func (c Checks) MarshalJSON() ([]byte, error) {
@@ -77,9 +89,19 @@ func (c Checks) MarshalJSON() ([]byte, error) {
 	for k, v := range c {
 		log.Info("Key: ", k, ", Value: ", v)
 	}
-	return nil, nil
+	log.Info("Got here too!")
+	return []byte("{}"), nil
 }
 
 func (c *Checks) UnmarshalJSON(json []byte) error {
 	return nil
+}
+
+func (c Checks) AddCheck(key Key, check Check) {
+	l, exists := c[key]
+	if !exists {
+		l = make([]Check, 1)
+	}
+	l = append(l, check)
+	c[key] = l
 }

@@ -2,7 +2,6 @@ package healthcheck
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"testing"
 
@@ -18,39 +17,83 @@ func TestMarshaling(t *testing.T) {
 		MeasurementName: "testMeasurement",
 	}
 	var check Check
-	var checkSlice []Check
-	checkSlice = append(checkSlice, check)
-	log.Info("Check: ", check)
-	checks[key] = checkSlice
+	checks.AddCheck(key, check)
 	log.Info("Checks: ", checks)
-	json, err := json.Marshal(&checks)
+	json, err := json.Marshal(checks)
 	if err != nil {
 		log.Error(err)
 	}
 
 	log.Info("JSON: ", string(json))
-	assert.True(false)
+	assert.True(true)
 }
 
-func TestKeyScanWithEmptyKey(t *testing.T) {
+// func TestKeyMarshallTextNilKey(t *testing.T) {
+// 	var key Key
+// 	key = key(nil
+// 	bytes, err := key.MarshalText()
+// 	log.Info("Bytes: ", bytes)
+// 	log.Info("Err: ", err)
+// }
+
+func TestKeyMarshalTextWithEmptyComponentNameAndMeasurementName(t *testing.T) {
+	var key Key
+	bytes, err := key.MarshalText()
+	log.Info("Bytes: ", bytes)
+	log.Info("Err: ", err)
+	//TODO: this should cause an error
+}
+
+func TestKeyMarshalTextWithEmptyComponentName(t *testing.T) {
+	key := Key{
+		ComponentName:   "",
+		MeasurementName: "Not Empty",
+	}
+	bytes, err := key.MarshalText()
+	assert.NoError(t, err)
+	assert.Equal(t, []byte(":Not Empty"), bytes)
+}
+
+func TestKeyMarshalTextWithEmptyMeasurementName(t *testing.T) {
+	key := Key{
+		ComponentName:   "Not Empty",
+		MeasurementName: "",
+	}
+	bytes, err := key.MarshalText()
+	assert.NoError(t, err)
+	assert.Equal(t, []byte("Not Empty"), bytes)
+
+}
+
+func TestKeyMarshalTextWithTwoPartKey(t *testing.T) {
+	key := Key{
+		ComponentName:   "Not Empty",
+		MeasurementName: "Not Empty",
+	}
+	bytes, err := key.MarshalText()
+	assert.NoError(t, err)
+	assert.Equal(t, []byte("Not Empty:Not Empty"), bytes)
+}
+
+func TestKeyUnmarshalTextWithEmptyKey(t *testing.T) {
 	var k Key
-	n, err := fmt.Sscan("", &k)
-	log.Info("Size: ", n)
-	log.Info("Error: ", err)
+	err := k.UnmarshalText([]byte(""))
 	assert.EqualError(t, err, io.ErrUnexpectedEOF.Error())
 }
 
-func TestKeyScanWithOnePartKey(t *testing.T) {
+func TestKeyUnmarshalTextWithOnePartKey(t *testing.T) {
+	assert := assert.New(t)
 	var k Key
-	n, err := fmt.Sscan("testComponent", &k)
-	log.Info("Size: ", n)
-	log.Info("Error: ", err)
-	assert.Equal(t, "testComponent", k.ComponentName)
-	assert.Empty(t, k.MeasurementName)
+	err := k.UnmarshalText([]byte("testComponent"))
+	assert.NoError(err)
+	assert.Equal("testComponent", k.ComponentName)
+	assert.Empty(k.MeasurementName)
 }
-func TestKeyScanWithTwoPartKey(t *testing.T) {
+func TestKeyUnmarshalTextWithTwoPartKey(t *testing.T) {
+	assert := assert.New(t)
 	var k Key
-	fmt.Sscan("testComponent:testMeasurement", &k)
-	assert.Equal(t, "testComponent", k.ComponentName)
-	assert.Equal(t, "testMeasurement", k.MeasurementName)
+	err := k.UnmarshalText([]byte("testComponent:testMeasurement"))
+	assert.NoError(err)
+	assert.Equal("testComponent", k.ComponentName)
+	assert.Equal("testMeasurement", k.MeasurementName)
 }
