@@ -9,18 +9,18 @@ import (
 type Status string
 
 const (
-	StatusFail string = "fail"
-	StatusPass string = "pass"
-	StatusWarn string = "warn"
+	Fail Status = "fail"
+	Pass Status = "pass"
+	Warn Status = "warn"
 )
 
 var statusData = []struct {
 	Name         string
 	ResponseCode int
-	Status       State
+	Status       Status
 }{
-	{"Pass", http.StatusOK, StatusPass},
-	{"Fail", http.StatusServiceUnavailable, StatusFail},
-	{"Warn", nil, StatusWarn},
-	{"Undetermined", http.StatusInternalServerError, Down},
+	{"Pass", http.StatusOK, Pass},
+	{"Fail", http.StatusServiceUnavailable, Fail},
+	{"Warn", http.StatusNotFound, Warn},
+	{"Undetermined", http.StatusInternalServerError, Fail},
 }
