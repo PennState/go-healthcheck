@@ -6,11 +6,12 @@ import (
 
 //State indicates whether the service as-a-whole and the individual checks
 //are okay.
-type State string
+type Status string
 
 const (
-	Down State = "DOWN" //Down indicates the service is down
-	Up   State = "UP"   //Up indicates the service is up
+	StatusFail string = "fail"
+	StatusPass string = "pass"
+	StatusWarn string = "warn"
 )
 
 var statusData = []struct {
@@ -18,7 +19,8 @@ var statusData = []struct {
 	ResponseCode int
 	Status       State
 }{
-	{"Ok", http.StatusOK, Up},
-	{"Error", http.StatusServiceUnavailable, Down},
+	{"Pass", http.StatusOK, StatusPass},
+	{"Fail", http.StatusServiceUnavailable, StatusFail},
+	{"Warn", nil, StatusWarn},
 	{"Undetermined", http.StatusInternalServerError, Down},
 }
