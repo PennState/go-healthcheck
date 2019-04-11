@@ -17,6 +17,7 @@ type Checker interface {
 //
 //See: https://inadarei.github.io/rfc-healthcheck/#the-checks-object
 type Check struct {
+	Key               Key `json:"-"`
 	ComponentId       string
 	ComponentType     string
 	ObservedValue     interface{}
@@ -108,11 +109,14 @@ func (c *Checks) UnmarshalJSON(json []byte) error {
 	return nil
 }
 
-func (c Checks) AddCheck(key Key, check Check) {
-	l, exists := c[key]
-	if !exists {
-		l = make([]Check, 1)
+func (c Checks) AddChecks(check ...Check) {
+	for _, v := range check {
+		k := v.Key
+		l, exists := c[k]
+		if !exists {
+			l = make([]Check, 1)
+		}
+		l = append(l, v)
+		c[k] = l
 	}
-	l = append(l, check)
-	c[key] = l
 }

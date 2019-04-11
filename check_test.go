@@ -17,7 +17,8 @@ func TestMarshaling(t *testing.T) {
 		MeasurementName: "testMeasurement",
 	}
 	var check Check
-	checks.AddCheck(key, check)
+	check.Key = key
+	checks.AddChecks(check)
 	log.Info("Checks: ", checks)
 	json, err := json.Marshal(checks)
 	if err != nil {
