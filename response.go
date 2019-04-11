@@ -1,10 +1,21 @@
 package healthcheck
 
-import "net/http"
+import (
+	"net/http"
+
+	log "github.com/sirupsen/logrus"
+)
 
 func GetHealthHandler(checkers ...Checker) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//TODO: iterate over checks and determine overall status
-		//      return handler function
+		var checks Checks
+		status := Pass
+		for _, checker := range checkers {
+			c, s := checker.Check()
+			checks.AddChecks(c...)
+			status = status.Max(s)
+		}
+		log.Info("Checks: ", checks)
+		log.Info("Status: ", status)
 	}
 }
