@@ -1,26 +1,73 @@
 package healthcheck
 
 import (
+	"errors"
 	"net/http"
+	"strings"
 )
 
 //State indicates whether the service as-a-whole and the individual checks
 //are okay.
-type Status string
+type Status int
 
+//These must be organized from least to greatest severity and must be in
+//the same order as the data structure below. (Replace with go-enumeration
+//when it's available.)
 const (
-	Fail Status = "fail"
-	Pass Status = "pass"
-	Warn Status = "warn"
+	Pass Status = iota
+	Warn Status = 1
+	Fail Status = 2
 )
 
 var statusData = []struct {
-	Name         string
-	ResponseCode int
-	Status       Status
+	name         string
+	responseCode int
 }{
-	{"Pass", http.StatusOK, Pass},
-	{"Fail", http.StatusServiceUnavailable, Fail},
-	{"Warn", http.StatusNotFound, Warn},
-	{"Undetermined", http.StatusInternalServerError, Fail},
+	{"Pass", http.StatusOK},
+	{"Warn", http.StatusOK},
+	{"Fail", http.StatusServiceUnavailable},
+	//{"Undetermined", http.StatusOK},
+}
+
+func ParseStatus(input string) (Status, error) {
+	switch strings.ToLower(input) {
+	case strings.ToLower(Pass.String()):
+		return Pass, nil
+	case strings.ToLower(Fail.String()):
+		return Pass, nil
+	case strings.ToLower(Warn.String()):
+		return Warn, nil
+	}
+	return Pass, errors.New("Blah!")
+}
+
+func (s Status) MarshalJSON() ([]byte, error) {
+	return []byte(strings.ToLower(s.String())), nil
+}
+
+func (s Status) Max(other Status) Status {
+	if s.Severity() >= other.Severity() {
+		return s
+	}
+	return other
+}
+
+func (s Status) Severity() int {
+	return int(s)
+}
+
+func (s Status) String() string {
+	return statusData[s].name
+}
+
+func (s Status) StatusCode() int {
+	return statusData[s].responseCode
+}
+
+func (s *Status) UnmarshalJSON(json []byte) error {
+	st, err := ParseStatus(string(json))
+	if err == nil {
+		*s = st
+	}
+	return err
 }
