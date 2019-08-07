@@ -26,7 +26,7 @@ type Check struct {
 	AffectedEndpoints []string
 	Time              time.Time
 	Output            string
-	Links             []string
+	Links             map[string]string
 }
 
 //Key provides a composite key denoting the component name and measurement
@@ -96,19 +96,8 @@ func (k *Key) UnmarshalText(text []byte) error {
 
 type Checks map[Key][]Check
 
-func (c Checks) MarshalJSON() ([]byte, error) {
-	log.Info("Got here!")
-	for k, v := range c {
-		log.Info("Key: ", k, ", Value: ", v)
-	}
-	log.Info("Got here too!")
-	return []byte("{}"), nil
-}
-
-func (c *Checks) UnmarshalJSON(json []byte) error {
-	return nil
-}
-
+// AddChecks is a convenience method that adds a result for a []
+// whether or not its key was previously known.
 func (c Checks) AddChecks(check ...Check) {
 	for _, v := range check {
 		k := v.Key
