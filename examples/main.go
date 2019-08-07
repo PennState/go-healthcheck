@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/selesy/go-healthcheck/checks/cpu"
+	"github.com/PennState/go-healthcheck/pkg/checks/cpu"
 	log "github.com/sirupsen/logrus"
 )
 
