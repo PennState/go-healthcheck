@@ -7,7 +7,7 @@ type Health struct {
 	Notes       []string
 	Output      string
 	Checks      Checks
-	Links       []string
+	Links       map[string]string
 	ServiceId   string
 	Description string
 }
