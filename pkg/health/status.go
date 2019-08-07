@@ -1,7 +1,7 @@
 package healthcheck
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -34,14 +34,14 @@ func ParseStatus(input string) (Status, error) {
 	case strings.ToLower(Pass.String()):
 		return Pass, nil
 	case strings.ToLower(Fail.String()):
-		return Pass, nil
+		return Fail, nil
 	case strings.ToLower(Warn.String()):
 		return Warn, nil
 	}
-	return Pass, errors.New("Blah!")
+	return Pass, fmt.Errorf("Couldn't parse Status with value: %v", input)
 }
 
-func (s Status) MarshalJSON() ([]byte, error) {
+func (s Status) MarshalText() ([]byte, error) {
 	return []byte(strings.ToLower(s.String())), nil
 }
 
@@ -64,7 +64,7 @@ func (s Status) StatusCode() int {
 	return statusData[s].responseCode
 }
 
-func (s *Status) UnmarshalJSON(json []byte) error {
+func (s *Status) UnmarshalText(json []byte) error {
 	st, err := ParseStatus(string(json))
 	if err == nil {
 		*s = st
