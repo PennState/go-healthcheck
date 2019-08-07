@@ -1,8 +1,8 @@
 package cpu
 
 import (
+	healthcheck "github.com/PennState/go-healthcheck/pkg/health"
 	linuxproc "github.com/c9s/goprocinfo/linux"
-	"github.com/selesy/go-healthcheck"
 	log "github.com/sirupsen/logrus"
 )
 
