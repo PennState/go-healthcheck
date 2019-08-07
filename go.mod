@@ -1,4 +1,4 @@
-module github.com/selesy/go-healthcheck/pkg/health
+module github.com/PennState/go-healthcheck/pkg/health
 
 go 1.12
 
