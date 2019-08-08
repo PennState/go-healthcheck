@@ -17,16 +17,16 @@ type Checker interface {
 //
 //See: https://inadarei.github.io/rfc-healthcheck/#the-checks-object
 type Check struct {
-	Key               Key `json:"-"`
-	ComponentId       string
-	ComponentType     string
-	ObservedValue     interface{}
-	ObservedUnit      string
-	Status            Status
-	AffectedEndpoints []string
-	Time              time.Time
-	Output            string
-	Links             map[string]string
+	Key               Key               `json:"-"`
+	ComponentId       string            `json:",omitempty"`
+	ComponentType     string            `json:",omitempty"`
+	ObservedValue     interface{}       `json:",omitempty"`
+	ObservedUnit      string            `json:",omitempty"`
+	Status            Status            `json:",omitempty"`
+	AffectedEndpoints []string          `json:",omitempty"`
+	Time              time.Time         `json:",omitempty"`
+	Output            string            `json:",omitempty"`
+	Links             map[string]string `json:",omitempty"`
 }
 
 //Key provides a composite key denoting the component name and measurement
