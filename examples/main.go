@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	cpu := cpu.CPUCheck{}
 	start := time.Now().UnixNano()
 	cpu.Check()
 	cpu.Check()

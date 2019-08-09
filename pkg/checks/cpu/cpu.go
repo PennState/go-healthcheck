@@ -11,7 +11,7 @@ type CPUCheck struct {
 
 //See: https://github.com/c9s/goprocinfo
 //See: https://www.linuxhowtos.org/System/procstat.htm
-func Check() ([]healthcheck.Check, healthcheck.Status) {
+func (c CPUCheck) Check() ([]healthcheck.Check, healthcheck.Status) {
 	var checks []healthcheck.Check
 
 	stat, err := linuxproc.ReadStat("/proc/stat")
