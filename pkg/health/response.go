@@ -15,7 +15,6 @@ func GetHealthHandler(checkers ...Checker) http.HandlerFunc {
 			checks.AddChecks(c...)
 			status = status.Max(s)
 		}
-		log.Info("Checks: ", checks)
-		log.Info("Status: ", status)
+		log.WithField("Status", status).Debug("Checks: ", checks)
 	}
 }
