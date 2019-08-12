@@ -77,7 +77,7 @@ func (t *testRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) 
 }
 
 func TestNoURLs(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient: testClient,
 	}
 
@@ -88,7 +88,7 @@ func TestNoURLs(t *testing.T) {
 }
 
 func TestSuccessfulMustPass(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   testClient,
 		MustPassURLs: []string{successURL},
 	}
@@ -107,7 +107,7 @@ func TestSuccessfulMustPass(t *testing.T) {
 }
 
 func TestFailedMustPass(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   testClient,
 		MustPassURLs: []string{internalServerErrorURL},
 	}
@@ -131,7 +131,7 @@ func TestFailedMustPass(t *testing.T) {
 }
 
 func TestErrorMustPass(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   errClient,
 		MustPassURLs: []string{longDelayURL},
 	}
@@ -153,7 +153,7 @@ func TestErrorMustPass(t *testing.T) {
 }
 
 func TestMixedMustPass(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   testClient,
 		MustPassURLs: []string{successURL, internalServerErrorURL},
 	}
@@ -185,7 +185,7 @@ func TestMixedMustPass(t *testing.T) {
 }
 
 func TestSuccessfulMayFail(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  testClient,
 		MayFailURLs: []string{successURL},
 	}
@@ -202,7 +202,7 @@ func TestSuccessfulMayFail(t *testing.T) {
 }
 
 func TestFailedMayFail(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  testClient,
 		MayFailURLs: []string{notFoundErrorURL},
 	}
@@ -226,7 +226,7 @@ func TestFailedMayFail(t *testing.T) {
 }
 
 func TestErrorMayFail(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  errClient,
 		MayFailURLs: []string{longDelayURL},
 	}
@@ -248,7 +248,7 @@ func TestErrorMayFail(t *testing.T) {
 }
 
 func TestMixedMayFail(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  testClient,
 		MayFailURLs: []string{successURL, internalServerErrorURL},
 	}
@@ -280,7 +280,7 @@ func TestMixedMayFail(t *testing.T) {
 }
 
 func TestAllSuccess(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   testClient,
 		MustPassURLs: []string{successURL},
 		MayFailURLs:  []string{successURL},
@@ -298,7 +298,7 @@ func TestAllSuccess(t *testing.T) {
 }
 
 func TestWarnRollup(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   testClient,
 		MustPassURLs: []string{successURL},
 		MayFailURLs:  []string{internalServerErrorURL},
@@ -326,7 +326,7 @@ func TestWarnRollup(t *testing.T) {
 }
 
 func TestFailRollup(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   testClient,
 		MustPassURLs: []string{notFoundErrorURL},
 		MayFailURLs:  []string{successURL},

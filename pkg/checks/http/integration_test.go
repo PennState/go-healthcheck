@@ -12,7 +12,7 @@ import (
 )
 
 func TestSuccessfulMustPassIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{successURL},
 	}
@@ -29,7 +29,7 @@ func TestSuccessfulMustPassIntegration(t *testing.T) {
 }
 
 func TestFailedMustPassIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{internalServerErrorURL},
 	}
@@ -53,7 +53,7 @@ func TestFailedMustPassIntegration(t *testing.T) {
 }
 
 func TestErrorMustPassIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{longDelayURL},
 	}
@@ -74,7 +74,7 @@ func TestErrorMustPassIntegration(t *testing.T) {
 }
 
 func TestMixedMustPassIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{successURL, internalServerErrorURL},
 	}
@@ -106,7 +106,7 @@ func TestMixedMustPassIntegration(t *testing.T) {
 }
 
 func TestSuccessfulMayFailIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  http.Client{},
 		MayFailURLs: []string{successURL},
 	}
@@ -123,7 +123,7 @@ func TestSuccessfulMayFailIntegration(t *testing.T) {
 }
 
 func TestFailedMayFailIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  http.Client{},
 		MayFailURLs: []string{notFoundErrorURL},
 	}
@@ -147,7 +147,7 @@ func TestFailedMayFailIntegration(t *testing.T) {
 }
 
 func TestErrorMayFailIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  errClient,
 		MayFailURLs: []string{successURL},
 	}
@@ -168,7 +168,7 @@ func TestErrorMayFailIntegration(t *testing.T) {
 }
 
 func TestMixedMayFailIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:  http.Client{},
 		MayFailURLs: []string{successURL, internalServerErrorURL},
 	}
@@ -200,7 +200,7 @@ func TestMixedMayFailIntegration(t *testing.T) {
 }
 
 func TestAllSuccessIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{successURL},
 		MayFailURLs:  []string{successURL},
@@ -218,7 +218,7 @@ func TestAllSuccessIntegration(t *testing.T) {
 }
 
 func TestWarnRollupIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{successURL},
 		MayFailURLs:  []string{internalServerErrorURL},
@@ -246,7 +246,7 @@ func TestWarnRollupIntegration(t *testing.T) {
 }
 
 func TestFailRollupIntegration(t *testing.T) {
-	check := HTTPCheck{
+	check := Check{
 		HttpClient:   http.Client{},
 		MustPassURLs: []string{notFoundErrorURL},
 		MayFailURLs:  []string{successURL},

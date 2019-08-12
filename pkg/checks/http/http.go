@@ -16,7 +16,7 @@ var (
 	defaultTimeout = 5 * time.Second
 )
 
-type HTTPCheck struct {
+type Check struct {
 	HttpClient http.Client
 	// map[name]url ?
 	MustPassURLs []string
@@ -28,7 +28,7 @@ type urlResult struct {
 	status healthcheck.Status
 }
 
-func (h HTTPCheck) Check() ([]healthcheck.Check, healthcheck.Status) {
+func (h Check) Check() ([]healthcheck.Check, healthcheck.Status) {
 	var checks []healthcheck.Check
 
 	mustPassChecks := h.MustPassURLs[:]
