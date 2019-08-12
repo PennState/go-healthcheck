@@ -101,10 +101,7 @@ type Checks map[Key][]Check
 func (c Checks) AddChecks(check ...Check) {
 	for _, v := range check {
 		k := v.Key
-		l, exists := c[k]
-		if !exists {
-			l = make([]Check, 1)
-		}
+		l := c[k]
 		l = append(l, v)
 		c[k] = l
 	}
