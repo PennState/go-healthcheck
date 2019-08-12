@@ -4,6 +4,7 @@
 package http
 
 import (
+	"encoding/json"
 	"net/http"
 	"testing"
 
@@ -271,4 +272,23 @@ func TestFailRollupIntegration(t *testing.T) {
 			t.Fail()
 		}
 	}
+}
+
+func TestMarshaling(t *testing.T) {
+	check := Check{
+		HttpClient:   http.Client{},
+		MustPassURLs: []string{notFoundErrorURL},
+		MayFailURLs:  []string{successURL},
+	}
+
+	checks, _ := check.Check()
+
+	bytes, err := json.Marshal(checks)
+
+	if err != nil {
+		t.Errorf("Unexpected error: %s", err.Error())
+		t.FailNow()
+	}
+
+	t.Log(string(bytes))
 }

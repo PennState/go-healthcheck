@@ -150,7 +150,7 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			ComponentName:   url,
 			MeasurementName: durationMeaurementName,
 		},
-		ObservedValue: requestDuration.String,
+		ObservedValue: requestDuration.String(),
 		ObservedUnit:  "Duration",
 		Time:          startTime,
 		ComponentType: "system",
