@@ -78,6 +78,7 @@ func (h Check) Check() ([]healthcheck.Check, healthcheck.Status) {
 }
 
 func checkURL(client http.Client, url string, ch chan urlResult) {
+	links := map[string]string{"target": url}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -85,13 +86,12 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			checks: []healthcheck.Check{
 				healthcheck.Check{
 					Key: healthcheck.Key{
-						ComponentName:   url,
-						MeasurementName: statusMeasurementName,
+						ComponentName: url,
 					},
 					Output:        err.Error(),
 					Time:          time.Now().UTC(),
 					ComponentType: "system",
-					Links:         map[string]string{"target": url},
+					Links:         links,
 					Status:        healthcheck.Fail,
 				}},
 			status: healthcheck.Fail,
@@ -108,13 +108,12 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			checks: []healthcheck.Check{
 				healthcheck.Check{
 					Key: healthcheck.Key{
-						ComponentName:   url,
-						MeasurementName: statusMeasurementName,
+						ComponentName: url,
 					},
 					Output:        err.Error(),
 					Time:          startTime,
 					ComponentType: "system",
-					Links:         map[string]string{"target": url},
+					Links:         links,
 					Status:        healthcheck.Fail,
 				}},
 			status: healthcheck.Fail,
@@ -131,14 +130,13 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	statusCheck := healthcheck.Check{
 		Key: healthcheck.Key{
-			ComponentName:   url,
-			MeasurementName: statusMeasurementName,
+			ComponentName: url,
 		},
 		ObservedValue: resp.StatusCode,
 		ObservedUnit:  statusMeasurementName,
 		Time:          startTime,
 		ComponentType: "system",
-		Links:         map[string]string{"target": url},
+		Links:         links,
 		Status:        status,
 	}
 	if statusCheck.Status != healthcheck.Pass {
@@ -147,14 +145,13 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	responseTimeCheck := healthcheck.Check{
 		Key: healthcheck.Key{
-			ComponentName:   url,
-			MeasurementName: durationMeaurementName,
+			ComponentName: url,
 		},
 		ObservedValue: requestDuration.String(),
-		ObservedUnit:  "Duration",
+		ObservedUnit:  "Latency",
 		Time:          startTime,
 		ComponentType: "system",
-		Links:         map[string]string{"target": url},
+		Links:         links,
 		Status:        healthcheck.Pass,
 	}
 
