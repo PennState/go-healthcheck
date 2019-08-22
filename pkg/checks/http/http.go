@@ -9,7 +9,7 @@ import (
 
 const (
 	statusMeasurementName  = "HTTP/1.1 Status"
-	durationMeaurementName = "Response Time"
+	durationMeaurementName = "Latency"
 )
 
 var (
@@ -86,11 +86,12 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			checks: []healthcheck.Check{
 				healthcheck.Check{
 					Key: healthcheck.Key{
-						ComponentName: url,
+						ComponentName:   url,
+						MeasurementName: statusMeasurementName,
 					},
 					Output:        err.Error(),
 					Time:          time.Now().UTC(),
-					ComponentType: "system",
+					ComponentType: "component",
 					Links:         links,
 					Status:        healthcheck.Fail,
 				}},
@@ -108,11 +109,12 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			checks: []healthcheck.Check{
 				healthcheck.Check{
 					Key: healthcheck.Key{
-						ComponentName: url,
+						ComponentName:   url,
+						MeasurementName: statusMeasurementName,
 					},
 					Output:        err.Error(),
 					Time:          startTime,
-					ComponentType: "system",
+					ComponentType: "component",
 					Links:         links,
 					Status:        healthcheck.Fail,
 				}},
@@ -130,12 +132,13 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	statusCheck := healthcheck.Check{
 		Key: healthcheck.Key{
-			ComponentName: url,
+			ComponentName:   url,
+			MeasurementName: statusMeasurementName,
 		},
 		ObservedValue: resp.StatusCode,
 		ObservedUnit:  statusMeasurementName,
 		Time:          startTime,
-		ComponentType: "system",
+		ComponentType: "component",
 		Links:         links,
 		Status:        status,
 	}
@@ -145,12 +148,13 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	responseTimeCheck := healthcheck.Check{
 		Key: healthcheck.Key{
-			ComponentName: url,
+			ComponentName:   url,
+			MeasurementName: durationMeaurementName,
 		},
 		ObservedValue: requestDuration.String(),
-		ObservedUnit:  "Latency",
+		ObservedUnit:  durationMeaurementName,
 		Time:          startTime,
-		ComponentType: "system",
+		ComponentType: "component",
 		Links:         links,
 		Status:        healthcheck.Pass,
 	}
