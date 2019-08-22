@@ -1,3 +1,5 @@
+//go:generate additional-properties
+
 package healthcheck
 
 import (
@@ -17,16 +19,17 @@ type Checker interface {
 //
 //See: https://inadarei.github.io/rfc-healthcheck/#the-checks-object
 type Check struct {
-	Key               Key               `json:"-"`
-	ComponentId       string            `json:",omitempty"`
-	ComponentType     string            `json:",omitempty"`
-	ObservedValue     interface{}       `json:",omitempty"`
-	ObservedUnit      string            `json:",omitempty"`
-	Status            Status            `json:",omitempty"`
-	AffectedEndpoints []string          `json:",omitempty"`
-	Time              time.Time         `json:",omitempty"`
-	Output            string            `json:",omitempty"`
-	Links             map[string]string `json:",omitempty"`
+	Key                  Key                    `json:"-"`
+	ComponentId          string                 `json:"componentId,omitempty"`
+	ComponentType        string                 `json:"componentType,omitempty"`
+	ObservedValue        interface{}            `json:"observedValue,omitempty"`
+	ObservedUnit         string                 `json:"observedUnit,omitempty"`
+	Status               Status                 `json:"status,omitempty"`
+	AffectedEndpoints    []string               `json:"affectedEndpoints,omitempty"`
+	Time                 time.Time              `json:"time,omitempty"`
+	Output               string                 `json:"output,omitempty"`
+	Links                map[string]string      `json:"links,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"*,omitempty"`
 }
 
 //Key provides a composite key denoting the component name and measurement

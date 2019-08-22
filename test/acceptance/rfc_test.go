@@ -74,20 +74,24 @@ func Example() healthcheck.Health {
 				healthcheck.Check{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
-					// TODO: Missing the Node field
 					ObservedValue: float64(85),
 					ObservedUnit:  "percent",
 					Status:        healthcheck.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
+					AdditionalProperties: map[string]interface{}{
+						"node": float64(1),
+					},
 				},
 				healthcheck.Check{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
-					// TODO: Missing the Node field
 					ObservedValue: float64(85),
 					ObservedUnit:  "percent",
 					Status:        healthcheck.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
+					AdditionalProperties: map[string]interface{}{
+						"node": float64(2),
+					},
 				},
 			},
 			healthcheck.Key{
@@ -97,20 +101,24 @@ func Example() healthcheck.Health {
 				healthcheck.Check{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
-					// TODO: Missing the Node field
 					ObservedValue: float64(8.5),
 					ObservedUnit:  "GiB",
 					Status:        healthcheck.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
+					AdditionalProperties: map[string]interface{}{
+						"node": float64(1),
+					},
 				},
 				healthcheck.Check{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
-					// TODO: Missing the Node field
 					ObservedValue: float64(5500),
 					ObservedUnit:  "MiB",
 					Status:        healthcheck.Pass,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
+					AdditionalProperties: map[string]interface{}{
+						"node": float64(2),
+					},
 				},
 			},
 		},
@@ -139,7 +147,6 @@ func TestRFCExampleCanBeUnmarshaled(t *testing.T) {
 	require.NoError(err)
 	log.Debug("Health: ", health)
 
-	// TODO: Add missing "node" fields to CPU and memory utilization
 	assert.Equal(Example(), health)
 
 	// TODO: Compare against "golden file" (or update)
