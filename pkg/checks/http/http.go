@@ -9,7 +9,7 @@ import (
 
 const (
 	statusMeasurementName  = "HTTP/1.1 Status"
-	durationMeaurementName = "Response Time"
+	durationMeaurementName = "Latency"
 )
 
 var (
@@ -91,7 +91,7 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 					},
 					Output:        err.Error(),
 					Time:          time.Now().UTC(),
-					ComponentType: "system",
+					ComponentType: "component",
 					Links:         links,
 					Status:        healthcheck.Fail,
 				}},
@@ -114,7 +114,7 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 					},
 					Output:        err.Error(),
 					Time:          startTime,
-					ComponentType: "system",
+					ComponentType: "component",
 					Links:         links,
 					Status:        healthcheck.Fail,
 				}},
@@ -138,7 +138,7 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 		ObservedValue: resp.StatusCode,
 		ObservedUnit:  statusMeasurementName,
 		Time:          startTime,
-		ComponentType: "system",
+		ComponentType: "component",
 		Links:         links,
 		Status:        status,
 	}
@@ -152,9 +152,9 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			MeasurementName: durationMeaurementName,
 		},
 		ObservedValue: requestDuration.String(),
-		ObservedUnit:  "Duration",
+		ObservedUnit:  durationMeaurementName,
 		Time:          startTime,
-		ComponentType: "system",
+		ComponentType: "component",
 		Links:         links,
 		Status:        healthcheck.Pass,
 	}
