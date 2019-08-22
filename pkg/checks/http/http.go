@@ -86,7 +86,8 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			checks: []healthcheck.Check{
 				healthcheck.Check{
 					Key: healthcheck.Key{
-						ComponentName: url,
+						ComponentName:   url,
+						MeasurementName: statusMeasurementName,
 					},
 					Output:        err.Error(),
 					Time:          time.Now().UTC(),
@@ -108,7 +109,8 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 			checks: []healthcheck.Check{
 				healthcheck.Check{
 					Key: healthcheck.Key{
-						ComponentName: url,
+						ComponentName:   url,
+						MeasurementName: statusMeasurementName,
 					},
 					Output:        err.Error(),
 					Time:          startTime,
@@ -130,7 +132,8 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	statusCheck := healthcheck.Check{
 		Key: healthcheck.Key{
-			ComponentName: url,
+			ComponentName:   url,
+			MeasurementName: statusMeasurementName,
 		},
 		ObservedValue: resp.StatusCode,
 		ObservedUnit:  statusMeasurementName,
@@ -145,10 +148,11 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	responseTimeCheck := healthcheck.Check{
 		Key: healthcheck.Key{
-			ComponentName: url,
+			ComponentName:   url,
+			MeasurementName: durationMeaurementName,
 		},
 		ObservedValue: requestDuration.String(),
-		ObservedUnit:  "Latency",
+		ObservedUnit:  "Duration",
 		Time:          startTime,
 		ComponentType: "system",
 		Links:         links,
