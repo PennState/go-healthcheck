@@ -7,32 +7,32 @@ import (
 	"testing"
 	"time"
 
-	healthcheck "github.com/PennState/go-healthcheck/pkg/health"
+	"github.com/PennState/go-healthcheck/pkg/health"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func Example() healthcheck.Health {
-	return healthcheck.Health{
-		Status:      healthcheck.Pass,
+func Example() health.Health {
+	return health.Health{
+		Status:      health.Pass,
 		Version:     "1",
 		ReleaseId:   "1.2.2",
 		Notes:       []string{""},
 		Output:      "",
 		ServiceId:   "f03e522f-1f44-4062-9b55-9587f91c9c41",
 		Description: "health of authz service",
-		Checks: healthcheck.Checks{
-			healthcheck.Key{
+		Checks: health.Checks{
+			health.Key{
 				ComponentName:   "cassandra",
 				MeasurementName: "responseTime",
-			}: []healthcheck.Check{
-				healthcheck.Check{
+			}: []health.ComponentDetail{
+				health.ComponentDetail{
 					ComponentId:   "dfd6cf2b-1b6e-4412-a0b8-f6f7797a60d2",
 					ComponentType: "datastore",
 					ObservedValue: float64(250),
 					ObservedUnit:  "ms",
-					Status:        healthcheck.Pass,
+					Status:        health.Pass,
 					AffectedEndpoints: []string{
 						"/users/{userId}",
 						"/customers/{customerId}/status",
@@ -41,80 +41,80 @@ func Example() healthcheck.Health {
 					Time: timeNoError("2018-01-17T03:36:48Z"),
 				},
 			},
-			healthcheck.Key{
+			health.Key{
 				ComponentName:   "cassandra",
 				MeasurementName: "connections",
-			}: []healthcheck.Check{
-				healthcheck.Check{
+			}: []health.ComponentDetail{
+				health.ComponentDetail{
 					ComponentId:   "dfd6cf2b-1b6e-4412-a0b8-f6f7797a60d2",
 					ComponentType: "datastore",
 					ObservedValue: float64(75),
-					Status:        healthcheck.Warn,
+					Status:        health.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
 					Links: map[string]string{
 						"self": "http://api.example.com/dbnode/dfd6cf2b/health",
 					},
 				},
 			},
-			healthcheck.Key{
+			health.Key{
 				ComponentName: "uptime",
-			}: []healthcheck.Check{
-				healthcheck.Check{
+			}: []health.ComponentDetail{
+				health.ComponentDetail{
 					ComponentType: "system",
 					ObservedValue: float64(1209600.245),
 					ObservedUnit:  "s",
-					Status:        healthcheck.Pass,
+					Status:        health.Pass,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
 				},
 			},
-			healthcheck.Key{
+			health.Key{
 				ComponentName:   "cpu",
 				MeasurementName: "utilization",
-			}: []healthcheck.Check{
-				healthcheck.Check{
+			}: []health.ComponentDetail{
+				health.ComponentDetail{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
 					ObservedValue: float64(85),
 					ObservedUnit:  "percent",
-					Status:        healthcheck.Warn,
+					Status:        health.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
 					AdditionalProperties: map[string]interface{}{
 						"node": float64(1),
 					},
 				},
-				healthcheck.Check{
+				health.ComponentDetail{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
 					ObservedValue: float64(85),
 					ObservedUnit:  "percent",
-					Status:        healthcheck.Warn,
+					Status:        health.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
 					AdditionalProperties: map[string]interface{}{
 						"node": float64(2),
 					},
 				},
 			},
-			healthcheck.Key{
+			health.Key{
 				ComponentName:   "memory",
 				MeasurementName: "utilization",
-			}: []healthcheck.Check{
-				healthcheck.Check{
+			}: []health.ComponentDetail{
+				health.ComponentDetail{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
 					ObservedValue: float64(8.5),
 					ObservedUnit:  "GiB",
-					Status:        healthcheck.Warn,
+					Status:        health.Warn,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
 					AdditionalProperties: map[string]interface{}{
 						"node": float64(1),
 					},
 				},
-				healthcheck.Check{
+				health.ComponentDetail{
 					ComponentId:   "6fd416e0-8920-410f-9c7b-c479000f7227",
 					ComponentType: "system",
 					ObservedValue: float64(5500),
 					ObservedUnit:  "MiB",
-					Status:        healthcheck.Pass,
+					Status:        health.Pass,
 					Time:          timeNoError("2018-01-17T03:36:48Z"),
 					AdditionalProperties: map[string]interface{}{
 						"node": float64(2),
@@ -142,7 +142,7 @@ func TestRFCExampleCanBeUnmarshaled(t *testing.T) {
 	require.NoError(err)
 	data, err := ioutil.ReadAll(file)
 	require.NoError(err)
-	var health healthcheck.Health
+	var health health.Health
 	err = json.Unmarshal(data, &health)
 	require.NoError(err)
 	log.Debug("Health: ", health)

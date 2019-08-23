@@ -1,7 +1,7 @@
 package cpu
 
 import (
-	healthcheck "github.com/PennState/go-healthcheck/pkg/health"
+	"github.com/PennState/go-healthcheck/pkg/health"
 	linuxproc "github.com/c9s/goprocinfo/linux"
 	log "github.com/sirupsen/logrus"
 )
@@ -11,12 +11,12 @@ type CPUCheck struct {
 
 //See: https://github.com/c9s/goprocinfo
 //See: https://www.linuxhowtos.org/System/procstat.htm
-func (c CPUCheck) Check() ([]healthcheck.Check, healthcheck.Status) {
-	var checks []healthcheck.Check
+func (c CPUCheck) Check() ([]health.Check, health.Status) {
+	var checks []health.Check
 
 	stat, err := linuxproc.ReadStat("/proc/stat")
 	if err != nil {
-		return checks, healthcheck.Warn
+		return checks, health.Warn
 	}
 
 	log.Info(stat.CPUStats[0])
@@ -37,5 +37,5 @@ func (c CPUCheck) Check() ([]healthcheck.Check, healthcheck.Status) {
 	}
 	log.Info("-----")
 
-	return checks, healthcheck.Pass
+	return checks, health.Pass
 }

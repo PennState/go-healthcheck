@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	healthcheck "github.com/PennState/go-healthcheck/pkg/health"
+	"github.com/PennState/go-healthcheck/pkg/health"
 )
 
 const (
@@ -24,12 +24,12 @@ type Check struct {
 }
 
 type urlResult struct {
-	checks []healthcheck.Check
-	status healthcheck.Status
+	checks []health.ComponentDetail
+	status health.Status
 }
 
-func (h Check) Check() ([]healthcheck.Check, healthcheck.Status) {
-	var checks []healthcheck.Check
+func (h Check) Check() ([]health.ComponentDetail, health.Status) {
+	var checks []health.ComponentDetail
 
 	mustPassChecks := h.MustPassURLs[:]
 	mustPassResults := make(chan urlResult)
@@ -53,7 +53,7 @@ func (h Check) Check() ([]healthcheck.Check, healthcheck.Status) {
 		go checkURL(client, hc, mayFailResults)
 	}
 
-	overallStatus := healthcheck.Pass
+	overallStatus := health.Pass
 
 	for range mustPassChecks {
 		urlResult := <-mustPassResults
@@ -68,7 +68,7 @@ func (h Check) Check() ([]healthcheck.Check, healthcheck.Status) {
 		urlResult := <-mayFailResults
 		if urlResult.status > overallStatus {
 			// MayFailChecks will at most raise the status to Warn if they fail
-			overallStatus = healthcheck.Warn
+			overallStatus = health.Warn
 		}
 
 		checks = append(checks, urlResult.checks...)
@@ -83,9 +83,9 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		ch <- urlResult{
-			checks: []healthcheck.Check{
-				healthcheck.Check{
-					Key: healthcheck.Key{
+			checks: []health.ComponentDetail{
+				health.ComponentDetail{
+					Key: health.Key{
 						ComponentName:   url,
 						MeasurementName: statusMeasurementName,
 					},
@@ -93,9 +93,9 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 					Time:          time.Now().UTC(),
 					ComponentType: "component",
 					Links:         links,
-					Status:        healthcheck.Fail,
+					Status:        health.Fail,
 				}},
-			status: healthcheck.Fail,
+			status: health.Fail,
 		}
 		return
 	}
@@ -106,9 +106,9 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 
 	if err != nil {
 		ch <- urlResult{
-			checks: []healthcheck.Check{
-				healthcheck.Check{
-					Key: healthcheck.Key{
+			checks: []health.ComponentDetail{
+				health.ComponentDetail{
+					Key: health.Key{
 						ComponentName:   url,
 						MeasurementName: statusMeasurementName,
 					},
@@ -116,22 +116,22 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 					Time:          startTime,
 					ComponentType: "component",
 					Links:         links,
-					Status:        healthcheck.Fail,
+					Status:        health.Fail,
 				}},
-			status: healthcheck.Fail,
+			status: health.Fail,
 		}
 		return
 	}
 
 	defer resp.Body.Close()
 
-	status := healthcheck.Pass
+	status := health.Pass
 	if resp.StatusCode/100 != 2 {
-		status = healthcheck.Fail
+		status = health.Fail
 	}
 
-	statusCheck := healthcheck.Check{
-		Key: healthcheck.Key{
+	statusCheck := health.ComponentDetail{
+		Key: health.Key{
 			ComponentName:   url,
 			MeasurementName: statusMeasurementName,
 		},
@@ -142,12 +142,12 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 		Links:         links,
 		Status:        status,
 	}
-	if statusCheck.Status != healthcheck.Pass {
+	if statusCheck.Status != health.Pass {
 		statusCheck.Output = resp.Status
 	}
 
-	responseTimeCheck := healthcheck.Check{
-		Key: healthcheck.Key{
+	responseTimeCheck := health.ComponentDetail{
+		Key: health.Key{
 			ComponentName:   url,
 			MeasurementName: durationMeaurementName,
 		},
@@ -156,11 +156,11 @@ func checkURL(client http.Client, url string, ch chan urlResult) {
 		Time:          startTime,
 		ComponentType: "component",
 		Links:         links,
-		Status:        healthcheck.Pass,
+		Status:        health.Pass,
 	}
 
 	ch <- urlResult{
-		checks: []healthcheck.Check{statusCheck, responseTimeCheck},
+		checks: []health.ComponentDetail{statusCheck, responseTimeCheck},
 		status: status,
 	}
 }

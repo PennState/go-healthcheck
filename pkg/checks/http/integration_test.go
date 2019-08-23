@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"testing"
 
-	healthcheck "github.com/PennState/go-healthcheck/pkg/health"
+	"github.com/PennState/go-healthcheck/pkg/health"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,12 +20,12 @@ func TestSuccessfulMustPassIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
-		assert.Equal(t, healthcheck.Pass, check.Status)
+		assert.Equal(t, health.Pass, check.Status)
 	}
 }
 
@@ -37,16 +37,16 @@ func TestFailedMustPassIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 			assert.Equal(t, http.StatusInternalServerError, check.ObservedValue)
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -61,13 +61,13 @@ func TestErrorMustPassIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 1, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -82,14 +82,14 @@ func TestMixedMustPassIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	passes, failures := 0, 0
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			if check.Status == healthcheck.Pass {
+			if check.Status == health.Pass {
 				passes++
 				assert.Equal(t, http.StatusOK, check.ObservedValue)
 			} else {
@@ -97,7 +97,7 @@ func TestMixedMustPassIntegration(t *testing.T) {
 				assert.Equal(t, http.StatusInternalServerError, check.ObservedValue)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -114,12 +114,12 @@ func TestSuccessfulMayFailIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
-		assert.Equal(t, healthcheck.Pass, check.Status)
+		assert.Equal(t, health.Pass, check.Status)
 	}
 }
 
@@ -131,16 +131,16 @@ func TestFailedMayFailIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 			assert.Equal(t, http.StatusNotFound, check.ObservedValue)
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -155,13 +155,13 @@ func TestErrorMayFailIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 1, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -176,14 +176,14 @@ func TestMixedMayFailIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	passes, failures := 0, 0
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			if check.Status == healthcheck.Pass {
+			if check.Status == health.Pass {
 				passes++
 				assert.Equal(t, http.StatusOK, check.ObservedValue)
 			} else {
@@ -191,7 +191,7 @@ func TestMixedMayFailIntegration(t *testing.T) {
 				assert.Equal(t, http.StatusInternalServerError, check.ObservedValue)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -209,12 +209,12 @@ func TestAllSuccessIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	for _, check := range checks {
-		assert.Equal(t, healthcheck.Pass, check.Status)
+		assert.Equal(t, health.Pass, check.Status)
 	}
 }
 
@@ -227,19 +227,19 @@ func TestWarnRollupIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
 			if check.Key.ComponentName == successURL {
-				assert.Equal(t, healthcheck.Pass, check.Status)
+				assert.Equal(t, health.Pass, check.Status)
 			} else {
-				assert.Equal(t, healthcheck.Fail, check.Status)
+				assert.Equal(t, health.Fail, check.Status)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -255,19 +255,19 @@ func TestFailRollupIntegration(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
 			if check.Key.ComponentName == successURL {
-				assert.Equal(t, healthcheck.Pass, check.Status)
+				assert.Equal(t, health.Pass, check.Status)
 			} else {
-				assert.Equal(t, healthcheck.Fail, check.Status)
+				assert.Equal(t, health.Fail, check.Status)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}

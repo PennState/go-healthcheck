@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	healthcheck "github.com/PennState/go-healthcheck/pkg/health"
+	"github.com/PennState/go-healthcheck/pkg/health"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -83,7 +83,7 @@ func TestNoURLs(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.Empty(t, checks)
 }
 
@@ -95,12 +95,12 @@ func TestSuccessfulMustPass(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
-		assert.Equal(t, healthcheck.Pass, check.Status)
+		assert.Equal(t, health.Pass, check.Status)
 	}
 
 	t.Logf("%#v", checks)
@@ -114,16 +114,16 @@ func TestFailedMustPass(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 			assert.Equal(t, http.StatusInternalServerError, check.ObservedValue)
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -138,13 +138,13 @@ func TestErrorMustPass(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 1, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 			assert.Contains(t, check.Output, testErr.Error())
 		} else {
 			t.Fail()
@@ -160,14 +160,14 @@ func TestMixedMustPass(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	passes, failures := 0, 0
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			if check.Status == healthcheck.Pass {
+			if check.Status == health.Pass {
 				passes++
 				assert.Equal(t, http.StatusOK, check.ObservedValue)
 			} else {
@@ -175,7 +175,7 @@ func TestMixedMustPass(t *testing.T) {
 				assert.Equal(t, http.StatusInternalServerError, check.ObservedValue)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -192,12 +192,12 @@ func TestSuccessfulMayFail(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
-		assert.Equal(t, healthcheck.Pass, check.Status)
+		assert.Equal(t, health.Pass, check.Status)
 	}
 }
 
@@ -209,16 +209,16 @@ func TestFailedMayFail(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 2, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 			assert.Equal(t, http.StatusNotFound, check.ObservedValue)
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -233,13 +233,13 @@ func TestErrorMayFail(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 1, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			assert.Equal(t, healthcheck.Fail, check.Status)
+			assert.Equal(t, health.Fail, check.Status)
 			assert.Contains(t, check.Output, testErr.Error())
 		} else {
 			t.Fail()
@@ -255,14 +255,14 @@ func TestMixedMayFail(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	passes, failures := 0, 0
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
-			if check.Status == healthcheck.Pass {
+			if check.Status == health.Pass {
 				passes++
 				assert.Equal(t, http.StatusOK, check.ObservedValue)
 			} else {
@@ -270,7 +270,7 @@ func TestMixedMayFail(t *testing.T) {
 				assert.Equal(t, http.StatusInternalServerError, check.ObservedValue)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -288,12 +288,12 @@ func TestAllSuccess(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Pass, status)
+	assert.Equal(t, health.Pass, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	for _, check := range checks {
-		assert.Equal(t, healthcheck.Pass, check.Status)
+		assert.Equal(t, health.Pass, check.Status)
 	}
 }
 
@@ -306,19 +306,19 @@ func TestWarnRollup(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Warn, status)
+	assert.Equal(t, health.Warn, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
 			if check.Key.ComponentName == successURL {
-				assert.Equal(t, healthcheck.Pass, check.Status)
+				assert.Equal(t, health.Pass, check.Status)
 			} else {
-				assert.Equal(t, healthcheck.Fail, check.Status)
+				assert.Equal(t, health.Fail, check.Status)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}
@@ -334,19 +334,19 @@ func TestFailRollup(t *testing.T) {
 
 	checks, status := check.Check()
 
-	assert.Equal(t, healthcheck.Fail, status)
+	assert.Equal(t, health.Fail, status)
 	assert.NotEmpty(t, checks)
 	assert.Equal(t, 4, len(checks))
 
 	for _, check := range checks {
 		if check.Key.MeasurementName == statusMeasurementName {
 			if check.Key.ComponentName == successURL {
-				assert.Equal(t, healthcheck.Pass, check.Status)
+				assert.Equal(t, health.Pass, check.Status)
 			} else {
-				assert.Equal(t, healthcheck.Fail, check.Status)
+				assert.Equal(t, health.Fail, check.Status)
 			}
 		} else if check.Key.MeasurementName == durationMeaurementName {
-			assert.Equal(t, healthcheck.Pass, check.Status)
+			assert.Equal(t, health.Pass, check.Status)
 		} else {
 			t.Fail()
 		}

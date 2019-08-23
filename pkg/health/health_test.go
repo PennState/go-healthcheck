@@ -1,4 +1,4 @@
-package healthcheck
+package health
 
 import (
 	"encoding/json"
@@ -16,9 +16,9 @@ func TestMarshaling(t *testing.T) {
 		ComponentName:   "testComponent",
 		MeasurementName: "testMeasurement",
 	}
-	var check Check
+	var check ComponentDetail
 	check.Key = key
-	checks.AddChecks(check)
+	checks.Add(check)
 	log.Info("Checks: ", checks)
 	json, err := json.Marshal(checks)
 	if err != nil {
