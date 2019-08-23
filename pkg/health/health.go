@@ -106,7 +106,7 @@ type Checks map[Key][]ComponentDetail
 
 // Add is a convenience method that adds a result for a []
 // whether or not its key was previously known.
-func (c Checks) Add(key Key, details []ComponentDetail) {
+func (c Checks) Add(key Key, details ...ComponentDetail) {
 	v, ok := c[key]
 	if !ok {
 		v = []ComponentDetail{}
@@ -117,7 +117,7 @@ func (c Checks) Add(key Key, details []ComponentDetail) {
 func (c Checks) Merge(checks ...Checks) {
 	for _, c := range checks {
 		for k, v := range c {
-			c.Add(k, v)
+			c.Add(k, v...)
 		}
 	}
 }

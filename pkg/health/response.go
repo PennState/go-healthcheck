@@ -23,7 +23,7 @@ func GetHealthHandler(checkers ...Checker) http.HandlerFunc {
 		status := Pass
 		for _, checker := range checkers {
 			c, s := checker.Check()
-			checks.Add(c[0].Key, c)
+			checks.Add(c[0].Key, c...)
 			status = status.Max(s)
 		}
 
