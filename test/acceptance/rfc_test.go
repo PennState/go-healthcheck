@@ -13,7 +13,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Example() health.Health {
+// RfcExample provides the object equivalent to the RFC's example output
+//
+// See - https://inadarei.github.io/rfc-healthcheck/#example-output
+func RfcExample() health.Health {
 	return health.Health{
 		Status:      health.Pass,
 		Version:     "1",
@@ -147,7 +150,7 @@ func TestRFCExampleCanBeUnmarshaled(t *testing.T) {
 	require.NoError(err)
 	log.Debug("Health: ", health)
 
-	assert.Equal(Example(), health)
+	assert.Equal(RfcExample(), health)
 
 	// TODO: Compare against "golden file" (or update)
 	// TODO: Round-trip the data and compare the source and result JSON
