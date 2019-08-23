@@ -17,15 +17,15 @@ import (
 //
 
 type Health struct {
-	Status      Status
-	Version     string
-	ReleaseId   string
-	Notes       []string
-	Output      string
-	Checks      Checks
-	Links       map[string]string
-	ServiceId   string
-	Description string
+	Status      Status            `json:"status"`
+	Version     string            `json:"version,omitempty"`
+	ReleaseId   string            `json:"releaseId,omitempty"`
+	Notes       []string          `json:"notes,omitempty"`
+	Output      string            `json:"output,omitempty"`
+	Checks      Checks            `json:"checks,omitempty"`
+	Links       map[string]string `json:"links,omitempty"`
+	ServiceId   string            `json:"serviceId,omitempty"`
+	Description string            `json:"description,omitempty"`
 }
 
 //
