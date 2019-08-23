@@ -18,7 +18,7 @@ func TestMarshaling(t *testing.T) {
 	}
 	var check ComponentDetail
 	check.Key = key
-	checks.Add(check)
+	checks.Add(key, []ComponentDetail{check})
 	log.Info("Checks: ", checks)
 	json, err := json.Marshal(checks)
 	if err != nil {

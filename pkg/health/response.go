@@ -1,4 +1,4 @@
-package healthcheck
+package health
 
 import (
 	"encoding/json"
@@ -7,13 +7,23 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type Response struct {
+	Data []byte
+	Code int
+}
+
+// TODO - Remove and replace with check functions
+type Checker interface {
+	Check() ([]ComponentDetail, Status)
+}
+
 func GetHealthHandler(checkers ...Checker) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		checks := Checks{}
 		status := Pass
 		for _, checker := range checkers {
 			c, s := checker.Check()
-			checks.AddChecks(c...)
+			checks.Add(c[0].Key, c)
 			status = status.Max(s)
 		}
 
