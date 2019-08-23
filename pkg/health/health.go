@@ -104,8 +104,9 @@ func (s *Status) UnmarshalText(json []byte) error {
 
 type Checks map[Key][]ComponentDetail
 
-// Add is a convenience method that adds a result for a []
-// whether or not its key was previously known.
+// Add is a convenience method that adds one or more ComponentDetail
+// objects into the Checks receiver for the provided key (whether or
+// not that key was previously known).
 func (c Checks) Add(key Key, details ...ComponentDetail) {
 	v, ok := c[key]
 	if !ok {
@@ -114,9 +115,11 @@ func (c Checks) Add(key Key, details ...ComponentDetail) {
 	c[key] = append(v, details...)
 }
 
+// Merge is a convenience method that adds more or more Checks objects
+// into the Checks receiver.
 func (c Checks) Merge(checks ...Checks) {
-	for _, c := range checks {
-		for k, v := range c {
+	for _, check := range checks {
+		for k, v := range check {
 			c.Add(k, v...)
 		}
 	}
