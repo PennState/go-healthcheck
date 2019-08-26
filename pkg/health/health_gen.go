@@ -4,8 +4,11 @@ package health
 
 import (
 	"encoding/json"
+	"reflect"
 	"strings"
 )
+
+type Valueea2f6e8a571941279831930cd1b66567 reflect.Value // DO NOT REMOVE (guarantees the reflect package is used)
 
 // MarshalJSON encodes the ComponentDetail struct to JSON with additional-properties
 func (c ComponentDetail) MarshalJSON() ([]byte, error) {
@@ -14,15 +17,33 @@ func (c ComponentDetail) MarshalJSON() ([]byte, error) {
 	if aux.AdditionalProperties == nil {
 		aux.AdditionalProperties = map[string]interface{}{}
 	}
-	aux.AdditionalProperties["componentId"] = aux.ComponentId
-	aux.AdditionalProperties["componentType"] = aux.ComponentType
-	aux.AdditionalProperties["observedValue"] = aux.ObservedValue
-	aux.AdditionalProperties["observedUnit"] = aux.ObservedUnit
-	aux.AdditionalProperties["status"] = aux.Status
-	aux.AdditionalProperties["affectedEndpoints"] = aux.AffectedEndpoints
-	aux.AdditionalProperties["time"] = aux.Time
-	aux.AdditionalProperties["output"] = aux.Output
-	aux.AdditionalProperties["links"] = aux.Links
+	if aux.ComponentId != "" {
+		aux.AdditionalProperties["componentId"] = aux.ComponentId
+	}
+	if aux.ComponentType != "" {
+		aux.AdditionalProperties["componentType"] = aux.ComponentType
+	}
+	if aux.ObservedValue != nil {
+		aux.AdditionalProperties["observedValue"] = aux.ObservedValue
+	}
+	if aux.ObservedUnit != "" {
+		aux.AdditionalProperties["observedUnit"] = aux.ObservedUnit
+	}
+	if reflect.ValueOf(aux.Status) == reflect.Zero(reflect.TypeOf(aux.Status)) {
+		aux.AdditionalProperties["status"] = aux.Status
+	}
+	if len(aux.AffectedEndpoints) != 0 {
+		aux.AdditionalProperties["affectedEndpoints"] = aux.AffectedEndpoints
+	}
+	if reflect.ValueOf(aux.Time) == reflect.Zero(reflect.TypeOf(aux.Time)) {
+		aux.AdditionalProperties["time"] = aux.Time
+	}
+	if aux.Output != "" {
+		aux.AdditionalProperties["output"] = aux.Output
+	}
+	if len(aux.Links) != 0 {
+		aux.AdditionalProperties["links"] = aux.Links
+	}
 	return json.Marshal(aux.AdditionalProperties)
 }
 
